@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Stats Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .input-group {
+            @apply mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100;
+        }
+        label {
+            @apply block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1;
+        }
+        input {
+            @apply w-full p-2 border-b border-gray-200 focus:border-blue-500 outline-none transition-colors text-lg;
+        }
+        .section-header {
+            @apply text-xs font-black text-blue-800 mb-4 pb-2 border-b border-blue-50 flex items-center justify-between gap-2;
+        }
+        .val-pill {
+            @apply text-[10px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap;
+        }
+        .btn-icon-clear {
+            @apply p-1.5 rounded-md hover:bg-red-50 text-red-400 border border-transparent hover:border-red-100 transition-all active:scale-90;
+        }
+    </style>
+</head>
+<body class="pb-32">
+
+    <div class="max-w-md mx-auto p-4">
+        <header class="py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-gray-800">Stats Reporter</h1>
+                <p class="text-gray-500 text-xs uppercase tracking-tighter">Dual-Part WhatsApp Format</p>
+            </div>
+            <button onclick="resetAllData()" class="bg-red-50 text-red-600 text-xs font-black px-3 py-2 rounded-lg border border-red-100 active:scale-95 transition-transform uppercase tracking-tighter">
+                Clear All Data
+            </button>
+        </header>
+
+        <!-- PART 1: 2359 DATA -->
+        <div class="mb-2 px-1 text-[10px] font-bold text-gray-400 uppercase flex justify-between items-center">
+            <span>Part 1: Midnight Summary</span>
+        </div>
+        <div id="section_p1" class="input-group border-l-4 border-l-indigo-500">
+            <div class="section-header">
+                <div class="flex items-center gap-1">
+                    <span>📊 AS OF 2359 DATA</span>
+                    <button onclick="clearPart1()" class="btn-icon-clear" title="Clear Part 1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+                <span id="p1_val_status" class="val-pill bg-gray-100 text-gray-400">Sum: 0</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label>Date (Yesterday)</label>
+                    <input type="text" id="p1_date" placeholder="DD/MM/YYYY" oninput="updateNextDay()">
+                </div>
+                <div><label>Total Adm</label><input type="number" id="p1_total" class="font-bold text-indigo-600" oninput="validateP1()"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div><label>MG</label><input type="number" id="p1_mg" oninput="validateP1()"></div>
+                <div><label>Surg</label><input type="number" id="p1_surg" oninput="validateP1()"></div>
+                <div><label>Ortho</label><input type="number" id="p1_ortho" oninput="validateP1()"></div>
+                <div><label>Paed</label><input type="number" id="p1_paed" oninput="validateP1()"></div>
+                <div><label>EMW</label><input type="number" id="p1_emw" oninput="validateP1()"></div>
+                <div><label>EYE</label><input type="number" id="p1_eye" oninput="validateP1()"></div>
+            </div>
+            <div class="mt-4"><label>AE Att.</label><input type="number" id="p1_att"></div>
+            <div class="mt-2"><label>Cat 1-3</label><input type="number" id="p1_cat13"></div>
+        </div>
+
+        <!-- PART 2: 0800 DATA -->
+        <div class="mb-2 px-1 text-[10px] font-bold text-gray-400 uppercase">Part 2: Morning Report</div>
+        <div id="section_p2" class="input-group border-l-4 border-l-green-500">
+            <div class="section-header">
+                <div class="flex items-center gap-1">
+                    <span>☀️ AS OF 0800 DATA</span>
+                    <button onclick="clearPart2()" class="btn-icon-clear" title="Clear Part 2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label>Date (Auto)</label>
+                    <input type="text" id="p2_date" placeholder="DD/MM/YYYY" class="text-green-600 bg-green-50/30">
+                </div>
+                <div>
+                    <label>Time</label>
+                    <input type="text" id="p2_time" value="08:00">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label>AE Att. (Morning)</label>
+                <input type="number" id="p2_att">
+            </div>
+
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-1">
+                    <label>Adm CMC</label>
+                    <span id="p2_cmc_val_status" class="val-pill bg-gray-100 text-gray-400">Total: 0</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mt-1">
+                    <input type="number" id="p2_mg" placeholder="MG" oninput="validateP2CMC()">
+                    <input type="number" id="p2_surg" placeholder="Surg" oninput="validateP2CMC()">
+                    <input type="number" id="p2_ortho" placeholder="Ortho" oninput="validateP2CMC()">
+                    <input type="number" id="p2_paed" placeholder="Paed" oninput="validateP2CMC()">
+                    <input type="number" id="p2_emw" placeholder="EMW" oninput="validateP2CMC()">
+                    <input type="number" id="p2_eye" placeholder="EYE" oninput="validateP2CMC()">
+                </div>
+            </div>
+
+            <div class="space-y-3 mb-4 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold w-12 text-gray-500">CAT 3</span>
+                    <input type="number" id="p2_c3c" placeholder="Qty" class="w-16 text-sm">
+                    <input type="number" id="p2_c3w" placeholder="Mins" class="flex-1 text-sm">
+                </div>
+                <div class="flex items-center gap-2 border-y border-gray-100 py-2">
+                    <span class="text-[10px] font-bold w-12 text-gray-500">CAT 4</span>
+                    <input type="number" id="p2_c4c" placeholder="Qty" class="w-16 text-sm">
+                    <input type="number" id="p2_c4h" placeholder="Hr" class="w-12 text-sm">
+                    <input type="number" id="p2_c4m" placeholder="Min" class="w-12 text-sm">
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold w-12 text-gray-500">CAT 5</span>
+                    <input type="number" id="p2_c5c" placeholder="Qty" class="w-16 text-sm">
+                    <input type="number" id="p2_c5h" placeholder="Hr" class="w-12 text-sm">
+                    <input type="number" id="p2_c5m" placeholder="Min" class="w-12 text-sm">
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-end mb-1">
+                    <label>Plan Admission</label>
+                    <span id="p2_plan_sum" class="val-pill bg-gray-100 text-gray-400">Total: 0</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="number" id="p2_p_med" placeholder="Med" oninput="calcPlanSum()">
+                    <input type="number" id="p2_p_emw" placeholder="EMW" oninput="calcPlanSum()">
+                    <input type="number" id="p2_p_surg" placeholder="Surg" oninput="calcPlanSum()">
+                    <input type="number" id="p2_p_ortho" placeholder="Ortho" oninput="calcPlanSum()">
+                    <input type="number" id="p2_p_paed" placeholder="Paed" oninput="calcPlanSum()">
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-gray-200 shadow-xl flex gap-2">
+            <button onclick="copyMessage()" class="flex-1 bg-green-600 text-white font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all">
+                COPY WHATSAPP MESSAGE
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full text-sm font-bold opacity-0 transition-opacity pointer-events-none z-50">
+        Copied!
+    </div>
+
+    <script>
+        function getRawVal(id) { return document.getElementById(id).value; }
+        
+        function getCleanVal(id) {
+            const val = document.getElementById(id).value;
+            if (val === "0" || val === "") return "";
+            return val;
+        }
+
+        function validateP1() {
+            const total = parseInt(getRawVal('p1_total')) || 0;
+            const sum = ['p1_mg', 'p1_surg', 'p1_ortho', 'p1_paed', 'p1_emw', 'p1_eye']
+                        .reduce((a, b) => a + (parseInt(getRawVal(b)) || 0), 0);
+            
+            const pill = document.getElementById('p1_val_status');
+            pill.innerText = `Sum: ${sum} / Total: ${total}`;
+            
+            if (total > 0 && sum === total) {
+                pill.className = "val-pill bg-green-100 text-green-700";
+            } else if (total > 0 && sum !== total) {
+                pill.className = "val-pill bg-red-100 text-red-700";
+            } else {
+                pill.className = "val-pill bg-gray-100 text-gray-400";
+            }
+        }
+
+        function validateP2CMC() {
+            const sum = ['p2_mg', 'p2_surg', 'p2_ortho', 'p2_paed', 'p2_emw', 'p2_eye']
+                        .reduce((a, b) => a + (parseInt(getRawVal(b)) || 0), 0);
+            
+            const pill = document.getElementById('p2_cmc_val_status');
+            pill.innerText = `Total: ${sum}`;
+            pill.className = sum > 0 ? "val-pill bg-green-100 text-green-700" : "val-pill bg-gray-100 text-gray-400";
+            return sum;
+        }
+
+        function calcPlanSum() {
+            const sum = ['p2_p_med', 'p2_p_emw', 'p2_p_surg', 'p2_p_ortho', 'p2_p_paed']
+                        .reduce((a, b) => a + (parseInt(getRawVal(b)) || 0), 0);
+            const pill = document.getElementById('p2_plan_sum');
+            pill.innerText = `Total: ${sum}`;
+            pill.className = sum > 0 ? "val-pill bg-blue-100 text-blue-700" : "val-pill bg-gray-100 text-gray-400";
+            return sum;
+        }
+
+        function formatDate(date) {
+            const d = date.getDate().toString().padStart(2, '0');
+            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const y = date.getFullYear();
+            return `${d}/${m}/${y}`;
+        }
+
+        function updateNextDay() {
+            const p1DateStr = document.getElementById('p1_date').value;
+            const p2DateInput = document.getElementById('p2_date');
+            try {
+                const parts = p1DateStr.split(/[\/-]/);
+                if (parts.length >= 2) {
+                    const day = parseInt(parts[0]);
+                    const month = parseInt(parts[1]) - 1;
+                    // If year is missing or partial, assume current year
+                    let year = parts[2] ? parseInt(parts[2]) : new Date().getFullYear();
+                    if (parts[2] && parts[2].length === 2) year += 2000;
+                    
+                    let date = new Date(year, month, day);
+                    if (!isNaN(date.getTime())) {
+                        date.setDate(date.getDate() + 1);
+                        p2DateInput.value = formatDate(date);
+                    }
+                }
+            } catch (e) { p2DateInput.value = ""; }
+        }
+
+        function copyMessage() {
+            const p1d = getRawVal('p1_date');
+            const p2d = getRawVal('p2_date');
+            const p2time = getRawVal('p2_time');
+            
+            let lines = ["Good morning"];
+
+            // --- PART 1 ---
+            lines.push(`As of ${p1d} 2359`, "");
+            lines.push(`AE att.: ${getCleanVal('p1_att')}`);
+            lines.push(`No. of Cat 1-3 cases: ${getCleanVal('p1_cat13')}`);
+            lines.push(`Total Admission: ${getCleanVal('p1_total')}`);
+            lines.push(`MG: ${getCleanVal('p1_mg')}`);
+            lines.push(`Surg: ${getCleanVal('p1_surg')}`);
+            lines.push(`Ortho: ${getCleanVal('p1_ortho')}`);
+            lines.push(`Paed: ${getCleanVal('p1_paed')}`);
+            lines.push(`EMW: ${getCleanVal('p1_emw')}`);
+            lines.push(`EYE: ${getCleanVal('p1_eye')}`);
+
+            lines.push("", "————————————");
+
+            // --- PART 2 ---
+            lines.push(`As of ${p2d} ${p2time}`);
+            lines.push(`AE att: ${getCleanVal('p2_att')}`);
+            lines.push(`*No. of Cat 1-3 cases*: ${getCleanVal('p1_cat13')}`);
+            
+            const cmcTotal = validateP2CMC();
+            lines.push(`Adm CMC: ${cmcTotal > 0 ? cmcTotal : ""}`);
+            lines.push(`MG: ${getCleanVal('p2_mg')}`);
+            lines.push(`Surg: ${getCleanVal('p2_surg')}`);
+            lines.push(`Ortho: ${getCleanVal('p2_ortho')}`);
+            lines.push(`Paed: ${getCleanVal('p2_paed')}`);
+            lines.push(`EMW: ${getCleanVal('p2_emw')}`);
+            lines.push(`EYE: ${getCleanVal('p2_eye')}`);
+            
+            lines.push("");
+            lines.push("AE Waiting:");
+            lines.push(`Cat 3: ${getCleanVal('p2_c3c')} , WT: ${getCleanVal('p2_c3w')} mins`);
+            lines.push(`Cat 4: ${getCleanVal('p2_c4c')} , WT : ${getCleanVal('p2_c4h')} hr ${getCleanVal('p2_c4m')} mins`);
+            lines.push(`Cat 5: ${getCleanVal('p2_c5c')} , WT : ${getCleanVal('p2_c5h')} hr ${getCleanVal('p2_c5m')} mins`);
+
+            lines.push("");
+            const planTotal = calcPlanSum();
+            lines.push(`Plan Admission:  Total ${planTotal > 0 ? planTotal : ""}`);
+            lines.push(`Med: ${getCleanVal('p2_p_med')}`);
+            lines.push(`EMW: ${getCleanVal('p2_p_emw')}`);
+            lines.push(`Surg: ${getCleanVal('p2_p_surg')}`);
+            lines.push(`Ortho: ${getCleanVal('p2_p_ortho')}`);
+            lines.push(`Paed：${getCleanVal('p2_p_paed')}`);
+
+            const el = document.createElement('textarea');
+            el.value = lines.join("\n").trim();
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const toast = document.getElementById('toast');
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        }
+
+        function clearPart1() {
+            document.querySelectorAll('#section_p1 input').forEach(input => {
+                if (input.id !== 'p1_date') input.value = '';
+            });
+            validateP1();
+        }
+
+        function clearPart2() {
+            document.querySelectorAll('#section_p2 input').forEach(input => {
+                if (input.id !== 'p2_date' && input.id !== 'p2_time') {
+                    input.value = '';
+                }
+            });
+            validateP2CMC();
+            calcPlanSum();
+        }
+
+        function resetAllData() {
+            const allInputs = document.querySelectorAll('#section_p1 input, #section_p2 input');
+            const excludedIds = ['p1_date', 'p2_date', 'p2_time'];
+            
+            allInputs.forEach(i => { 
+                if (!excludedIds.includes(i.id)) {
+                    i.value = ''; 
+                }
+            });
+            
+            validateP1(); 
+            validateP2CMC(); 
+            calcPlanSum();
+        }
+
+        function setDefaults() {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+            
+            document.getElementById('p1_date').value = formatDate(yesterday);
+            document.getElementById('p2_time').value = "08:00";
+            updateNextDay();
+            validateP1();
+            validateP2CMC();
+            calcPlanSum();
+        }
+
+        window.onload = setDefaults;
+    </script>
+</body>
+</html>
